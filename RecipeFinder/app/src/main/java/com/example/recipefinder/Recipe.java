@@ -6,12 +6,33 @@ public class Recipe {
     private String description;
     private String[] ingredients;
     private String[] procedure;
+    private double estimatedPrice; // in PHP
+    private String nutritionalInfo;
+    private String healthBenefits;
+    private String mealType; // New field for meal type: Breakfast, Lunch, Dinner
 
-    public Recipe(String name, String description, String[] ingredients, String[] procedure) {
+    public Recipe(String name, String description, String[] ingredients, String[] procedure,
+                 double estimatedPrice, String nutritionalInfo, String healthBenefits) {
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
         this.procedure = procedure;
+        this.estimatedPrice = estimatedPrice;
+        this.nutritionalInfo = nutritionalInfo;
+        this.healthBenefits = healthBenefits;
+        this.mealType = ""; // Default empty
+    }
+
+    public Recipe(String name, String description, String[] ingredients, String[] procedure,
+                 double estimatedPrice, String nutritionalInfo, String healthBenefits, String mealType) {
+        this.name = name;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.procedure = procedure;
+        this.estimatedPrice = estimatedPrice;
+        this.nutritionalInfo = nutritionalInfo;
+        this.healthBenefits = healthBenefits;
+        this.mealType = mealType;
     }
 
     // Getters
@@ -29,6 +50,26 @@ public class Recipe {
 
     public String[] getProcedure() {
         return procedure;
+    }
+
+    public double getEstimatedPrice() {
+        return estimatedPrice;
+    }
+
+    public String getNutritionalInfo() {
+        return nutritionalInfo;
+    }
+
+    public String getHealthBenefits() {
+        return healthBenefits;
+    }
+
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
     }
 }
 

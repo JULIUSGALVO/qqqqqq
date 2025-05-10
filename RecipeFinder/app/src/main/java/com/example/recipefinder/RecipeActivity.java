@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RecipeActivity extends AppCompatActivity {
     private static final String TAG = "RecipeActivity";
@@ -61,118 +63,133 @@ public class RecipeActivity extends AppCompatActivity {
         // Get ingredients from intent
         ArrayList<String> ingredients = getIntent().getStringArrayListExtra("ingredients");
         if (ingredients != null && !ingredients.isEmpty()) {
+            Log.d(TAG, "Starting recipe generation with ingredients: " + ingredients);
             generateRecipesWithGemini(ingredients);
         } else {
+            Log.w(TAG, "No ingredients provided");
             showNoResults("No ingredients provided");
         }
         
         // Set click listener for recipe items
-        recipeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Recipe selectedRecipe = recipeList.get(position);
-                openRecipeDetail(selectedRecipe);
-            }
+        recipeListView.setOnItemClickListener((parent, view, position, id) -> {
+            Recipe selectedRecipe = recipeList.get(position);
+            openRecipeDetail(selectedRecipe);
         });
     }
     
-    private void openRecipeDetail(Recipe recipe) {
-        Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra("name", recipe.getName());
-        intent.putExtra("description", recipe.getDescription());
-        intent.putExtra("ingredients", recipe.getIngredients());
-        intent.putExtra("procedure", recipe.getProcedure());
-        startActivity(intent);
-    }
-
     private void generateRecipesWithGemini(ArrayList<String> ingredients) {
         showLoading();
         
         // Combine ingredients into a prompt for Gemini
         StringBuilder prompt = new StringBuilder();
-        prompt.append("Generate at least 5 authentic Filipino recipes using these ingredients: ");
+        prompt.append("Generate 10 authentic Filipino recipes using these ingredients: ");
         for (int i = 0; i < ingredients.size(); i++) {
             prompt.append(ingredients.get(i));
             if (i < ingredients.size() - 1) {
                 prompt.append(", ");
             }
         }
-        prompt.append(". For each recipe, use the following strict format (do not skip any section, and always use these exact headers):\n\n---\nRecipe Name: [Name]\nDescription: [Brief description]\nIngredients:\n- [ingredient 1]\n- [ingredient 2]\n- ...\nProcedure:\n1. [step 1]\n2. [step 2]\n3. ...\n---\n\nDo not use markdown or bold text. Always use the exact headers: 'Recipe Name:', 'Description:', 'Ingredients:', 'Procedure:'. Separate each recipe with a line of three dashes (---). Make sure the ingredients and procedure are always in a list format as shown.");
+        prompt.append(". For each recipe, use the following strict format (do not skip any section, and always use these exact headers):\n\n---\nRecipe Name: [Name]\nDescription: [Brief description]\nEstimated Price: [Price in PHP, e.g., 250.00]\nNutritional Info: [Calories, protein, carbs, fat, etc.]\nHealth Benefits: [Key health benefits of the dish]\nIngredients:\n- [ingredient 1]\n- [ingredient 2]\n- ...\nProcedure:\n1. [step 1]\n2. [step 2]\n3. ...\n---\n\nDo not use markdown or bold text. Always use the exact headers: 'Recipe Name:', 'Description:', 'Estimated Price:', 'Nutritional Info:', 'Health Benefits:', 'Ingredients:', 'Procedure:'. Separate each recipe with a line of three dashes (---). Make sure the ingredients and procedure are always in a list format as shown. Include realistic prices in PHP (₱) for the ingredients in the Philippines.");
+
+        Log.d(TAG, "Generated prompt: " + prompt.toString());
+
+        // Create OkHttpClient with increased timeouts
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build();
 
         // Retrofit setup
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(GEMINI_BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         GeminiApiService apiService = retrofit.create(GeminiApiService.class);
         GeminiRequest request = new GeminiRequest(prompt.toString());
-
-        Call<GeminiResponse> call = apiService.generateContent(GEMINI_MODEL_URL, request);
-        call.enqueue(new Callback<GeminiResponse>() {
+        
+        Log.d(TAG, "Making API call to Gemini...");
+        apiService.generateContent(GEMINI_MODEL_URL, request).enqueue(new Callback<GeminiResponse>() {
             @Override
             public void onResponse(Call<GeminiResponse> call, Response<GeminiResponse> response) {
-                hideLoading();
-                
-                if (response.isSuccessful() && response.body() != null &&
-                    response.body().getCandidates() != null &&
-                    response.body().getCandidates().length > 0 &&
-                    response.body().getCandidates()[0].getContent() != null &&
-                    response.body().getCandidates()[0].getContent().getParts() != null &&
-                    response.body().getCandidates()[0].getContent().getParts().length > 0) {
-                    
-                    String responseText = response.body().getCandidates()[0].getContent().getParts()[0].getText();
-                    Log.d(TAG, "Gemini response: " + responseText);
-                    
-                    // Parse the response into Recipe objects
-                    List<Recipe> recipes = RecipeParser.parseRecipes(responseText);
-                    
-                    if (!recipes.isEmpty()) {
-                        recipeList.clear();
-                        recipeList.addAll(recipes);
-                        adapter.notifyDataSetChanged();
-                        showResults();
+                Log.d(TAG, "Received response from Gemini. Code: " + response.code());
+                if (response.isSuccessful() && response.body() != null) {
+                    GeminiResponse geminiResponse = response.body();
+                    if (geminiResponse.getCandidates() != null && geminiResponse.getCandidates().length > 0) {
+                        String responseText = geminiResponse.getCandidates()[0].getContent().getParts()[0].getText();
+                        Log.d(TAG, "Received response text: " + responseText);
+                        
+                        List<Recipe> recipes = RecipeParser.parseRecipes(responseText);
+                        Log.d(TAG, "Parsed " + recipes.size() + " recipes");
+                        
+                        runOnUiThread(() -> {
+                            recipeList.clear();
+                            recipeList.addAll(recipes);
+                            adapter.notifyDataSetChanged();
+                            hideLoading();
+                            
+                            if (recipes.isEmpty()) {
+                                showNoResults("No recipes found");
+                            }
+                        });
                     } else {
-                        showNoResults("Could not parse any recipes from response");
+                        Log.e(TAG, "No candidates in response");
+                        showError("No recipes generated");
                     }
                 } else {
-                    showNoResults("Failed to generate recipes");
-                    Log.e(TAG, "API response unsuccessful or empty");
+                    Log.e(TAG, "Error response: " + response.code() + " - " + response.message());
+                    showError("Error: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<GeminiResponse> call, Throwable t) {
-                hideLoading();
-                showNoResults("Error: " + t.getMessage());
                 Log.e(TAG, "API call failed", t);
+                showError("Error: " + t.getMessage());
             }
         });
     }
-    
+
     private void showLoading() {
         loadingProgressBar.setVisibility(View.VISIBLE);
         recipeListView.setVisibility(View.GONE);
         noResultsText.setVisibility(View.GONE);
     }
-    
+
     private void hideLoading() {
         loadingProgressBar.setVisibility(View.GONE);
-    }
-    
-    private void showResults() {
         recipeListView.setVisibility(View.VISIBLE);
-        noResultsText.setVisibility(View.GONE);
     }
-    
+
     private void showNoResults(String message) {
+        loadingProgressBar.setVisibility(View.GONE);
         recipeListView.setVisibility(View.GONE);
         noResultsText.setVisibility(View.VISIBLE);
         noResultsText.setText(message);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    // Handle back button press
+    private void showError(String message) {
+        runOnUiThread(() -> {
+            hideLoading();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            showNoResults(message);
+        });
+    }
+
+    private void openRecipeDetail(Recipe recipe) {
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra("name", recipe.getName());
+        intent.putExtra("description", recipe.getDescription());
+        intent.putExtra("ingredients", recipe.getIngredients());
+        intent.putExtra("procedure", recipe.getProcedure());
+        intent.putExtra("price", recipe.getEstimatedPrice());
+        intent.putExtra("nutritionalInfo", recipe.getNutritionalInfo());
+        intent.putExtra("healthBenefits", recipe.getHealthBenefits());
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DishDetailActivity">
+
+    <!-- App Bar with collapsing image -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginStart="16dp"
+            app:expandedTitleMarginBottom="24dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <!-- Dish Image -->
+            <ImageView
+                android:id="@+id/image_dish_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="Dish Image"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/dish_placeholder"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7" />
+
+            <!-- Enhanced Gradient Overlay with deeper color -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_overlay"
+                android:alpha="0.7"
+                app:layout_collapseMode="parallax" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="80dp">
+
+            <!-- Dish Name -->
+            <TextView
+                android:id="@+id/text_dish_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:textStyle="bold"
+                tools:text="Chicken Adobo" />
+
+            <!-- Description Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Description"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:background="@color/light_gray"
+                android:padding="8dp" />
+
+            <!-- Dish Description -->
+            <TextView
+                android:id="@+id/text_dish_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                tools:text="Classic Filipino dish with chicken marinated in vinegar, soy sauce, and spices." />
+
+            <!-- Price Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Price"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:background="@color/light_gray"
+                android:padding="8dp" />
+
+            <!-- Price -->
+            <TextView
+                android:id="@+id/text_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textStyle="bold"
+                tools:text="₱250.00" />
+
+            <!-- Nutritional Info Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Nutritional Information"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:background="@color/light_gray"
+                android:padding="8dp" />
+
+            <!-- Nutritional Info -->
+            <TextView
+                android:id="@+id/text_nutritional_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                tools:text="Per serving: 320 calories, 15g protein, 5g carbohydrates, 18g fat" />
+
+            <!-- Health Benefits Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Health Benefits"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:background="@color/light_gray"
+                android:padding="8dp" />
+
+            <!-- Health Benefits -->
+            <TextView
+                android:id="@+id/text_health_benefits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                tools:text="Good source of protein and contains antioxidants from garlic and spices." />
+
+            <!-- Ingredients Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Ingredients"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:drawableStart="@android:drawable/ic_menu_sort_by_size"
+                android:drawablePadding="8dp"
+                app:drawableTint="#673AB7"
+                android:textSize="18sp"
+                android:textColor="#673AB7"
+                android:background="#F3E5F5"
+                android:padding="12dp" />
+
+            <!-- Ingredients List -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#E1BEE7"
+                app:cardBackgroundColor="#FFFFFF">
+                
+                <TextView
+                    android:id="@+id/text_ingredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:lineSpacingExtra="8dp"
+                    android:elevation="0dp"
+                    android:textIsSelectable="true"
+                    android:textColor="#212121"
+                    android:textSize="16sp"
+                    android:minHeight="100dp"
+                    android:typeface="normal"
+                    android:fontFamily="sans-serif"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    tools:text="• 2 lbs chicken pieces\n• 1/2 cup soy sauce\n• 1/2 cup vinegar\n• 6 cloves garlic\n• 1 tbsp whole peppercorn\n• 3 bay leaves\n• 1 tbsp cooking oil" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Instructions Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Cooking Instructions"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:drawableStart="@android:drawable/ic_menu_directions"
+                android:drawablePadding="8dp"
+                app:drawableTint="#4CAF50"
+                android:textSize="18sp"
+                android:textColor="#4CAF50"
+                android:background="#E8F5E9"
+                android:padding="12dp" />
+
+            <!-- Instructions -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#C8E6C9"
+                app:cardBackgroundColor="#FFFFFF">
+                
+                <TextView
+                    android:id="@+id/text_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:lineSpacingExtra="8dp"
+                    android:elevation="0dp"
+                    android:textIsSelectable="true"
+                    android:textColor="#212121"
+                    android:textSize="16sp"
+                    android:minHeight="100dp"
+                    android:typeface="normal"
+                    android:fontFamily="sans-serif"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    tools:text="1. Combine chicken, soy sauce, and vinegar in a large pot.\n2. Add garlic, peppercorn, and bay leaves.\n3. Cover and marinate for 1-3 hours.\n4. Heat pot and bring to a boil.\n5. Lower heat and simmer for 30 minutes or until chicken is tender.\n6. In a separate pan, heat oil and fry the marinated chicken until brown.\n7. Pour in the remaining sauce and simmer until sauce thickens.\n8. Serve hot with steamed rice." />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Meal Type Selection -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Meal Type"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textStyle="bold"
+                android:background="@color/light_gray"
+                android:padding="8dp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_meal_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="80dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_breakfast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:text="Breakfast" />
+
+                <RadioButton
+                    android:id="@+id/radio_lunch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:checked="true"
+                    android:text="Lunch" />
+
+                <RadioButton
+                    android:id="@+id/radio_dinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dinner" />
+            </RadioGroup>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Add to Meal Schedule Button -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/button_add_to_meal_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Add to Meal Schedule"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:backgroundTint="#673AB7"
+        app:icon="@android:drawable/ic_menu_add"
+        app:iconTint="#FFFFFF"
+        app:elevation="6dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout> 

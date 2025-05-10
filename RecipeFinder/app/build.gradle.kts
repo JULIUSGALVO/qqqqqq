@@ -40,6 +40,21 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1") // Optional - for Kotlin extensions
+
+    // Material Design Components
+    implementation("com.google.android.material:material:1.11.0")
+    
+    // Material Date Picker
+    implementation("com.google.android.material:material:1.11.0")
+
+    // ViewModel and LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+    
     // Other dependencies
     implementation(libs.appcompat)
     implementation(libs.material)

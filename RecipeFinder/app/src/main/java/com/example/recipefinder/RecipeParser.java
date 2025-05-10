@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class RecipeParser {
     
-            // Parse the raw text response from Gemini API into Recipe objects
+    // Parse the raw text response from Gemini API into Recipe objects
     public static List<Recipe> parseRecipes(String responseText) {
         List<Recipe> recipes = new ArrayList<>();
         // Split the text by the strict delimiter '---'
@@ -19,8 +19,13 @@ public class RecipeParser {
                 String description = extractSection(block, "Description:");
                 String[] ingredients = extractListSection(block, "Ingredients:");
                 String[] procedure = extractListSection(block, "Procedure:");
+                double price = extractPrice(block);
+                String nutritionalInfo = extractSection(block, "Nutritional Info:");
+                String healthBenefits = extractSection(block, "Health Benefits:");
+                
                 if (!name.isEmpty()) {
-                    recipes.add(new Recipe(name, description, ingredients, procedure));
+                    recipes.add(new Recipe(name, description, ingredients, procedure,
+                                         price, nutritionalInfo, healthBenefits));
                 }
             } catch (Exception e) {
                 continue;
@@ -37,6 +42,20 @@ public class RecipeParser {
             return matcher.group(1).trim();
         }
         return "";
+    }
+    
+    // Extract price from the block
+    private static double extractPrice(String block) {
+        Pattern pattern = Pattern.compile("Estimated Price:\\s*₱?([0-9.]+)");
+        Matcher matcher = pattern.matcher(block);
+        if (matcher.find()) {
+            try {
+                return Double.parseDouble(matcher.group(1));
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        return 0.0;
     }
     
     // Extract a list section (ingredients or procedure)
