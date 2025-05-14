@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#FFD54F"
+                android:centerColor="#FFA726"
+                android:endColor="#FF7043"
+                android:type="linear" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    
+    <!-- A semi-transparent overlay to make text more readable -->
+    <item android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#33000000" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    
+    <!-- Plate icon centered -->
+    <item android:gravity="center">
+        <bitmap
+            android:src="@android:drawable/ic_menu_gallery"
+            android:tint="#FFFFFF"
+            android:gravity="center" />
+    </item>
+</layer-list> 

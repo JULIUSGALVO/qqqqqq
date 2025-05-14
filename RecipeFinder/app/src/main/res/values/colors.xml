@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimary">#FF6200EE</color>
+    <color name="colorPrimaryDark">#FF3700B3</color>
+    <color name="colorAccent">#FF03DAC5</color>
     <color name="colorPrimaryVariant">#3700B3</color>
-    <color name="colorOnPrimary">#FFFFFF</color>
-
-    <color name="colorSecondary">#03DAC6</color>
+    
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="gray">#A9A9A9</color>
+    <color name="dark_gray">#696969</color>
+    
+    <color name="breakfast_color">#8BC34A</color>
+    <color name="lunch_color">#FF9800</color>
+    <color name="dinner_color">#673AB7</color>
+    
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorSecondary">#03DAC5</color>
     <color name="colorOnSecondary">#000000</color>
-
-    <!-- Light Mode Background Colors -->
+    
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorOnBackground">#000000</color>
-
     <color name="colorSurface">#FFFFFF</color>
     <color name="colorOnSurface">#000000</color>
+    
+    <color name="selected_item_background">#209E9E9E</color>
 </resources>
 

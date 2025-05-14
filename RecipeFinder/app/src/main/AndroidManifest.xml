@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-
+        android:name=".RecipeFinderApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,21 +13,76 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RecipeFinder"
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         tools:targetApi="31">
 
+        <!-- HomeActivity as new launcher -->
         <activity
-            android:name=".RecipeActivity"
-            android:exported="false" />
-        <!-- MainActivity -->
-        <activity
-            android:name=".MainActivity"
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <!-- Scheduled Meals Activity -->
+        <activity
+            android:name=".ScheduledMealsActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+
+        <!-- Original MainActivity (now search activity) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+
+        <activity
+            android:name=".RecipeActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".RecipeDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".RecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeActivity" />
+        </activity>
+        
+        <!-- Grocery List Activity -->
+        <activity
+            android:name=".GroceryListActivity"
+            android:exported="false"
+            android:parentActivityName=".ScheduledMealsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ScheduledMealsActivity" />
+        </activity>
+        
+        <!-- Dish Detail Activity -->
+        <activity
+            android:name=".DishDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
         </activity>
     </application>
 
